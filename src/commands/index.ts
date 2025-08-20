@@ -1,12 +1,13 @@
 import { help } from './help.js';
 import { tools } from './tools.js';
 import { sessions, newSession, remove, load } from './session/index.js';
-import type { Tool } from '../types/index.js';
+import { ToolRegistry } from '../tools/index.js';
+
 export interface CommandResult {
     handled: boolean;
 }
 
-export function handleCommand(input: string, toolMap: Record<string, Tool>): CommandResult {
+export function handleCommand(input: string): CommandResult {
     if (!input.startsWith('/')) return { handled: false };
 
     const parts = input.slice(1).split(' ');
@@ -20,7 +21,7 @@ export function handleCommand(input: string, toolMap: Record<string, Tool>): Com
             help();
             break;
         case 'tools':
-            tools(toolMap);
+            tools(ToolRegistry);
             break;
         case 'sessions':
             sessions();

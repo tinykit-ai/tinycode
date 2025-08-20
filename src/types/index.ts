@@ -144,7 +144,7 @@ export interface BaseProvider {
   chat(messages: Message[], tools: ProviderSchema[], history: string): Promise<ProviderResponse>;
   processTools(messages: Message[], tools: Record<string, Tool>, workspaceRoot: string, log: Logger): Promise<Array<Message> | null>;
   logMessages(newMessages: Array<Message>, log: Logger): void;
-  compressMessages(messages: Message[], history: string): Promise<CompressionResult>;
+  compressMessages(messages: Message[], history: string): Promise<[string, Message[]]>;
   needsToolProcessing(stopReason: string | null): boolean;
 }
 

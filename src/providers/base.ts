@@ -23,22 +23,22 @@ export class BaseProvider implements IBaseProvider {
     }
 
     get maxMessages(): number {
-        return 40;
+        return 5;
     }
 
     get schemaKey(): 'anthropicSchema' | 'copilotSchema' {
         return this.protocol.schemaKey;
     }
 
-    async compressMessages(messages: Message[], history: string): Promise<CompressionResult> {
+    async compressMessages(messages: Message[], history: string): Promise<[string, Message[]]> {
         const { messagesToCompress, postCompressionMessages } = this.protocol.getMessagesToCompress(messages);
         if (messagesToCompress.length === 0) {
-            return { messages, history };
+            return [history, messages];
         }
         const body = this.protocol.createCompressionRequest(messagesToCompress, history, this.model);
         const response = await this.client.chat(body);
         const compressedHistory = this.protocol.parseCompressionResponse(messages, response);
-        return { messages: postCompressionMessages, history: compressedHistory };
+        return [compressedHistory, postCompressionMessages];
     }
 
     async chat(messages: Message[], tools: ProviderSchema[], history: string): Promise<ProviderResponse> {
